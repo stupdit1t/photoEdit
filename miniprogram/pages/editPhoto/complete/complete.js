@@ -32,7 +32,7 @@ Page({
 		})
 	},
 	contineu() {
-		debugger
+		//debugger
 		wx.navigateBack({
 			delta: 3   //默认值是1
 		})

@@ -10,7 +10,6 @@ const APP_ID = process.env.APP_ID;
 const API_KEY = process.env.API_KEY;
 const SECRET_KEY = process.env.SECRET_KEY;
 
-
 // 新建一个对象，建议只保存一个对象调用服务接口
 const client = new AipBodyAnalysisClient(APP_ID, API_KEY, SECRET_KEY);
 
@@ -20,9 +19,8 @@ const db = cloud.database()
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-	
 	const wxContext = cloud.getWXContext()
-    const openid = wxContext.OPENID
+  const openid = wxContext.OPENID
 	
 	db.collection('tmp-file').add({ data: { time: db.serverDate(), fileID: event.fileID } })
 	// 获取图片url地址
@@ -31,26 +29,25 @@ exports.main = async (event, context) => {
 	// 云存储图片处理地址  返回这个地址，   精细抠图可能还会用
 	const tmpOriginImgSrc = encodeURI(`${tempFileURL}?imageMogr2/thumbnail/1500x1500|imageMogr2/format/jpg`)
 	// 获取图片buffer
-	const imgBuffer = await getHttpBuffer(tmpOriginImgSrc)
+  const imgBuffer = await getHttpBuffer(tmpOriginImgSrc)
 	// 图片的base64
 	const imageBase64 = encodeURI(imgBuffer.toString('base64'))
 	//百度人像人脸检测
 	const { result, result_num } = (await client.gesture(imageBase64))
-
 	if(!result.length || result_num !==1 || result[0].classname !=='Face') return { res:false, msg: '图片不符合要求' }
 	
 	// 百度人像分割结果
 	const { foreground, error_code, error_msg } = (await client.bodySeg(imageBase64, { type: 'foreground' }))
-
 	if (error_code) return { res:false, msg: error_msg }
 	if (!foreground) return { res:false, foreground, error_code, error_msg }
 
-	const resultFileId = await uploadBase64(foreground, openid)
+  const resultFileId = await uploadBase64(foreground, openid)
+  console.log("bd4:",resultFileId);
 	db.collection('tmp-file').add({ data: { time: db.serverDate(), fileID: resultFileId } })
 
 
 	return {
-		res:true,
+		res: true,
 		tmpOriginImgSrc,
 		imageDivisionResultFileId: resultFileId
 	}

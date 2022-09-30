@@ -38,12 +38,12 @@
     "showES6CompileOption": false,
     "useCompilerPlugins": false
   },
-  "appid": "wx17e91dff8b1d0f99",
+  "appid": "wx67e64770d36b8738",
   "projectname": "%E8%AF%81%E4%BB%B6%E7%85%A7%E5%BE%AE%E4%BF%A1%E5%B0%8F%E7%A8%8B%E5%BA%8F",
   "libVersion": "2.21.0",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
-  "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
   "condition": {
     "plugin": {
       "list": []
@@ -76,5 +76,15 @@
         }
       ]
     }
+  },
+  "compileType": "miniprogram",
+  "srcMiniprogramRoot": "miniprogram/",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {
+    "tabIndent": "insertSpaces",
+    "tabSize": 2
   }
 }

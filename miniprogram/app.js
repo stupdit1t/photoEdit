@@ -4,7 +4,7 @@ App({
 	onLaunch: function () {
 		// 初始化云开发
 		wx.cloud.init({
-			resourceEnv: 'noco-04nbo',
+			resourceEnv: 'cloud1-8g87gso1a03c870d',
 			traceUser: true
 		})
 		// 新用户入库
@@ -147,7 +147,6 @@ App({
 				height: 413,
 				discription: '健康证'
 			},
-			
 		]
 	}
 })

@@ -30,7 +30,7 @@ Page({
 		top: 0,
 		scale: 1,
 		rotate: 0,
-		
+		moveTop: 0,
 	},
 
 	// 尺寸改变
@@ -57,7 +57,8 @@ Page({
 
 	// 图片合成
 	async composeImage () {
-		wx.showLoading({ title: '制作中...', })
+    wx.showLoading({ title: '制作中...', })
+    
 		const { photoBg, photoName, targetWidth, targetHeight, filePath} = this.data
 		const colorObj={
 			'#ff0000':'红底',
@@ -111,7 +112,7 @@ Page({
 	computedXY (baseImg, imgData) {
 		
 		const left = (imgData.left - imgData.initImgWidth / 2)
-		const top = (imgData.top - imgData.initImgHeight / 2)
+		const top = (imgData.top + (imgData.moveTop === 0 ? 0 : imgData.moveTop + this.pxTorpx(28)) - imgData.initImgHeight / 2)
 		const noScaleImgHeight = baseImg.width * imgData.initImgHeight / imgData.initImgWidth
 		const resultImgWidth = baseImg.width * imgData.scale
 		const resultImgHeight = noScaleImgHeight * imgData.scale
@@ -120,8 +121,17 @@ Page({
 		const x = left - scaleChangeWidth
 		const y = top - scaleChangeHeight
 		return { x, y, width: resultImgWidth, height: resultImgHeight }
-	},
-
+  },
+  rpxTopx(rpx) {
+    let deviceWidth = wx.getSystemInfoSync().windowWidth; //获取设备屏幕宽度
+    let px = (deviceWidth / 750) * Number(rpx)
+    return Math.floor(px);
+  },
+  pxTorpx(px) {
+    let deviceWidth = wx.getSystemInfoSync().windowWidth; //获取设备屏幕宽度
+    let rpx = (750 / deviceWidth) * Number(px) 
+    return Math.floor(rpx);
+  },
 	// 将远端图片，下载到本地
 	downloadImg (url) {
 		return new Promise((resolve, reject) => {
@@ -207,9 +217,8 @@ Page({
 		
 		const eventChannel = this.getOpenerEventChannel && this.getOpenerEventChannel()
 		eventChannel && eventChannel.on('acceptDataFromOpenerPage', (data) => {
-			const {width, height, photoName, tmpOriginImgSrc, imageDivisionResultFileId} = data
+      let {width, height, photoName, tmpOriginImgSrc, imageDivisionResultFileId} = data
 			console.log(JSON.stringify(data))
-			debugger
 			this.setData({
 				photoName:photoName,
 				targetWidth: width,
@@ -262,7 +271,7 @@ Page({
 			width: _width,
 			height: _height,
 			left: _width / 2,
-			top: _height / 2 + photoSizeObj.height - _height +120
+			top: _height / 2 + photoSizeObj.height - _height
 		}
 		const outerDataName = e.currentTarget.dataset.dataname
 		that.setData(outerDataName ? {
@@ -270,9 +279,15 @@ Page({
 				...that.data[outerDataName],
 				...imgLoadSetData
 			}
-		} : imgLoadSetData)
-	},
+    } : imgLoadSetData)
 
+    console.log(this.data)
+	},
+  onImgChange: function(e){
+      console.log(e.detail)
+      const that = this;
+      that.setData({moveTop: e.detail.y});
+  },
 	/**
 	 * 用户点击右上角分享
 	 */

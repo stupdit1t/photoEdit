@@ -16,11 +16,11 @@
           <text wx-if="{{authorized}}" bindtap="getUserProfile" style="color: white;">{{userInfo.nickName}}</text>
       </view>
     </view>
-    <view class="my-info-r" wx-if="{{authorized}}">
+    <!-- <view class="my-info-r" wx-if="{{authorized}}">
       <view wx-if="{{signed}}" class="signIn">今日已签到</view>
       <view wx-if="{{!signed && !signInLoading && userInfo.openid}}" class="signIn text-yellow text-xl" bindtap="signIn">签到＞</view>
       <view wx-if="{{signInLoading && !signed}}" class="signIn">签到中...</view>
-    </view>
+    </view>-->
   </view>
 </view>
 <view class="user-info-content">
